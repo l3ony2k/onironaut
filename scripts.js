@@ -3,23 +3,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setCanvasSize() {
         const canvasWidth = window.innerWidth;
-        const canvasHeight = canvasWidth * 2;
+        const canvasHeight = canvasWidth * 1.4; // Set the height to 1.4 times the width
 
         // Set the size of the container
         const filmContainer = document.querySelector('.film-container');
         filmContainer.style.width = `${canvasWidth}px`;
         filmContainer.style.height = `${canvasHeight}px`;
         filmContainer.style.position = 'relative'; // Ensure container is positioned
-        filmContainer.style.overflow = 'hidden'; // Ensure no overflow from the container
+        filmContainer.style.overflow = 'hidden'; // Prevent cards from going outside the container
+        filmContainer.style.padding = '0'; // Ensure no padding in the container
+        filmContainer.style.margin = '0';  // Ensure no margin in the container
     }
 
-    // Call it once to set initial size
+    // Call it once to set the initial size
     setCanvasSize();
 
     // Function to move each card
     function drift(card) {
         let xPos = Math.random() * window.innerWidth;
-        let yPos = Math.random() * window.innerHeight;
+        let yPos = Math.random() * (window.innerWidth * 1.4);
         let xMove = (Math.random() * 0.5 + 0.1); // Slow speed for x-axis
         let yMove = (Math.random() * 0.5 + 0.1); // Slow speed for y-axis
 
@@ -33,19 +35,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function animate() {
             const canvasWidth = window.innerWidth;
-            const canvasHeight = canvasWidth * 2;
+            const canvasHeight = canvasWidth * 1.4;
 
             // Update positions based on direction
             xPos += xMove * xDirection;
             yPos += yMove * yDirection;
 
             // Bounce back if the card hits the right/left edge
-            if (xPos + card.offsetWidth >= canvasWidth || xPos <= 0) {
+            if (xPos + card.offsetWidth >= canvasWidth) {
+                xPos = canvasWidth - card.offsetWidth; // Ensure it stays within bounds
+                xDirection *= -1; // Reverse the horizontal direction
+            } else if (xPos <= 0) {
+                xPos = 0; // Ensure it stays within bounds
                 xDirection *= -1; // Reverse the horizontal direction
             }
 
             // Bounce back if the card hits the top/bottom edge
-            if (yPos + card.offsetHeight >= canvasHeight || yPos <= 0) {
+            if (yPos + card.offsetHeight >= canvasHeight) {
+                yPos = canvasHeight - card.offsetHeight; // Ensure it stays within bounds
+                yDirection *= -1; // Reverse the vertical direction
+            } else if (yPos <= 0) {
+                yPos = 0; // Ensure it stays within bounds
                 yDirection *= -1; // Reverse the vertical direction
             }
 
@@ -66,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle window resizing to adjust canvas dimensions dynamically
     window.addEventListener('resize', setCanvasSize);
 });
+
 // Prevent text selection
 document.addEventListener('selectstart', function (e) {
     e.preventDefault();
