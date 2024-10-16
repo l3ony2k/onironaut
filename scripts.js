@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get random indices of 20 cards to show
     const randomIndices = getRandomCardsIndices(20, cards.length);
 
-    // Show only the 10 random cards
+    // Show only the 20 random cards
     randomIndices.forEach(index => {
         cards[index].style.display = 'block';
     });
@@ -322,4 +322,26 @@ document.body.addEventListener('mouseup', function () {
     }
 
     isDragging = false;
+});
+
+// info box
+document.addEventListener('DOMContentLoaded', () => {
+    const floatingTitle = document.querySelector('.floating-title');
+    const infoBox = document.querySelector('.info-box');
+
+    // Show the info box on hover
+    floatingTitle.addEventListener('mouseenter', () => {
+        infoBox.style.display = 'block';
+        setTimeout(() => {
+            infoBox.style.opacity = '1'; // Fade in
+        }, 50); // Delay for smooth transition
+    });
+
+    // Hide the info box when not hovered
+    floatingTitle.addEventListener('mouseleave', () => {
+        infoBox.style.opacity = '0'; // Fade out
+        setTimeout(() => {
+            infoBox.style.display = 'none';
+        }, 500); // Wait for the fade-out transition before hiding
+    });
 });

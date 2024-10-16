@@ -36,6 +36,16 @@ body {
     color: white; /* Default text color as white */
 }
 
+/* Custom cursor for the whole website */
+body, .film-card, .floating-title, .info-box {
+    cursor: url('./img/cursor.svg'), auto; /* Fallback to default cursor if image doesn't load */
+}
+
+/* Ensure the close button cursor is consistent */
+.close-button {
+    cursor: url('./img/cursor.svg'), auto;
+}
+
 /* Disable text selection and change cursor */
 body, .film-card {
     user-select: none;
@@ -57,12 +67,12 @@ body, .film-card {
 /* Close button (X) style */
 .close-button {
     position: absolute;
-    top: 20px; /* Adjust for top-right corner */
-    right: 20px; /* Adjust for top-right corner */
-    width: 20px; /* Increase size for easier interaction */
-    height: 20px;
+    top: 24px; /* Adjust for top-right corner */
+    right: 24px; /* Adjust for top-right corner */
+    width: 24px; /* Increase size for easier interaction */
+    height: 24px;
     margin-left: 20px;
-    border: 2px solid white; /* Crosshair effect */
+    border: 1px solid white; 
     transform: rotate(45deg); /* Rotate to form an X shape */
     display: none; /* Hide by default */
     cursor: pointer; /* Pointer cursor */
@@ -138,18 +148,44 @@ body, .film-card {
     font-family: 'EditorialNewThin', sans-serif;
     font-size: 8vw; /* Adjust size as needed */
     color: white;
-    position: absolute;
+    position: fixed;
     top: 0; /* Ensure it's in the top area */
     left: 0;
     width: auto;
     white-space: nowrap; /* Prevent text from wrapping */
     filter: blur(0px); /* Add a subtle blur */
     z-index: 10; /* Ensure it's above other elements */
-    transition: opacity 2s ease-in-out;
+    transition: filter 2s ease-in-out;
     padding: 30px; /* Add padding if needed */
 }
 
 .floating-title:hover {
     filter: blur(12px); 
 }
+
+/* Info box styling */
+.info-box {
+    position: fixed; /* Fixed to the top-right corner */
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    padding: 15px;
+    /* background-color: rgba(0, 0, 0, 0.8); */
+    color: white;
+    font-family: 'SuisseIntlMono', serif;
+    font-size: 0.7em;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none; /* Hidden by default */
+    z-index: 15; /* Ensure it's above other elements */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Smooth fade-in/out transition */
+}
+
+/* Show the info box when the floating title is hovered */
+.floating-title:hover + .info-box {
+    display: block;
+    opacity: 1; /* Fade in */
+}
+
 
