@@ -2,8 +2,8 @@
 body, html {
     margin: 0;
     padding: 0;
-    width: 100vw; /* Body width equal to the viewport width */
-    height: 130vw; /* Body height equal to 130% of the viewport width */
+    /* width: 100vw; /* Body width equal to the viewport width */
+    /* height: 80vw; Body height equal to 130% of the viewport width */
     overflow-x: auto; /* Allow horizontal scrolling */
     background-color: #000; /* Black background */
 }
@@ -24,9 +24,11 @@ body, .film-card {
     position: relative;
     margin: 0;
     padding: 0;
-    width: 100vw; /* Width = 100vw */
-    height: 130vw; /* Height = 130vw */
-    overflow: visible; /* Allow overflow in both directions */
+    overflow: scroll; /* Allow overflow in both directions */
+}
+
+.film-container::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Edge */
 }
 
 /* Close button (X) style */
@@ -84,4 +86,16 @@ body, .film-card {
     font-weight: bold;
 }
 
+/* the dragging rectangle */
+.gradient-rect {
+    position: absolute;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 5s ease-out, filter 5s ease-out;
+    border-radius: 10px;
+}
 
+.fade {
+    opacity: 0;
+    filter: blur(50px);
+}

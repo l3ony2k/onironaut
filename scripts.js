@@ -2,6 +2,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.film-card');
     let specialCards = []; // Array to store the 3 cards with fixed blur of 1.5px
 
+    // Function to get 10 random unique indices
+    function getRandomCardsIndices(count, max) {
+        const indices = [];
+        while (indices.length < count) {
+            const randIndex = Math.floor(Math.random() * max);
+            if (!indices.includes(randIndex)) {
+                indices.push(randIndex);
+            }
+        }
+        return indices;
+    }
+
+    // Hide all cards initially
+    cards.forEach(card => card.style.display = 'none');
+
+    // Get random indices of 20 cards to show
+    const randomIndices = getRandomCardsIndices(20, cards.length);
+
+    // Show only the 10 random cards
+    randomIndices.forEach(index => {
+        cards[index].style.display = 'block';
+    });
+
     function setCanvasSize() {
         const canvasWidth = window.innerWidth; // Canvas width equals the browser's width
         const canvasHeight = canvasWidth * 1.3; // Set height to 130vw, proportional to width
@@ -34,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.top = `${yPos}px`;
 
         // Apply a random blur between 0px and 5px to each card in the default state
-        const randomBlur = Math.random() * 5;
+        const randomBlur = Math.random() * 10;
         card.style.filter = `blur(${randomBlur}px)`;
 
         // Apply a random transparency between 10% (0.1) and 50% (0.5)
@@ -144,8 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => card.remove(), 1000); // Remove the card after the transition
     }
 
-    // Apply the drift effect and random blur to each card
-    cards.forEach(card => drift(card));
+    // Apply the drift effect and random blur to each of the visible random 10 cards
+    randomIndices.forEach(index => {
+        drift(cards[index]);
+    });
 
     // Handle window resizing to adjust canvas dimensions dynamically
     window.addEventListener('resize', setCanvasSize);
@@ -154,4 +179,81 @@ document.addEventListener('DOMContentLoaded', () => {
 // Prevent text selection
 document.addEventListener('selectstart', function (e) {
     e.preventDefault();
+});
+
+let isDragging = false;
+let startX, startY, rect;
+
+// Function to generate random RGBA color
+function getRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgba(${r}, ${g}, ${b}, 0.2)`;  // 20% transparent
+}
+
+// Function to create a random gradient
+function createRandomGradient() {
+    const color1 = getRandomColor();
+    const color2 = getRandomColor();
+    return `linear-gradient(45deg, ${color1}, ${color2})`;
+}
+
+document.body.addEventListener('mousedown', function (e) {
+    isDragging = true;
+
+    // Capture the starting position of the drag
+    startX = e.pageX;
+    startY = e.pageY;
+
+    // Create the gradient rectangle
+    rect = document.createElement('div');
+    rect.classList.add('gradient-rect');
+
+    // Set a random gradient as the background
+    rect.style.background = createRandomGradient();
+
+    // Initially place the rectangle at the starting position with zero width and height
+    rect.style.left = `${startX}px`;
+    rect.style.top = `${startY}px`;
+    rect.style.width = `0px`;
+    rect.style.height = `0px`;
+
+    document.body.appendChild(rect);
+});
+
+document.body.addEventListener('mousemove', function (e) {
+    if (isDragging && rect) {
+        // Calculate the current width and height based on mouse movement
+        const currentX = e.pageX;
+        const currentY = e.pageY;
+
+        // Update width and height of the rectangle based on drag area
+        const width = Math.abs(currentX - startX);
+        const height = Math.abs(currentY - startY);
+
+        // Adjust position if dragging in the opposite direction
+        rect.style.width = `${width}px`;
+        rect.style.height = `${height}px`;
+
+        // Adjust position if dragging to the left or upwards
+        rect.style.left = `${Math.min(currentX, startX)}px`;
+        rect.style.top = `${Math.min(currentY, startY)}px`;
+    }
+});
+
+document.body.addEventListener('mouseup', function () {
+    if (isDragging) {
+        // Trigger the fade and blur effect when the mouse is released
+        rect.classList.add('fade');
+        
+        // Remove the rectangle after it has fully faded out, with some extra time for a smooth transition
+        setTimeout(() => {
+            if (rect && rect.parentElement) {
+                rect.parentElement.removeChild(rect);
+            }
+        }, 50000);  // Wait slightly longer than the 5s fade-out time to avoid sudden cut-off
+    }
+
+    isDragging = false;
 });
