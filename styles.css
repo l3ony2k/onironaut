@@ -36,13 +36,14 @@ body, .film-card {
     width: 300px;
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     position: absolute; /* Cards can freely float */
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth opacity and movement */
+    opacity: 0.4; /* Dim the card by default (40% transparency) */
     color: white;
 }
 
 /* Hover effect for film cards */
 .film-card:hover {
-    transform: translateY(-10px); /* Lift on hover */
+    opacity: 1; /* Full opacity on hover */
 }
 
 /* Card titles */

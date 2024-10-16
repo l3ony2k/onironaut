@@ -2,30 +2,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.film-card');
 
     function setCanvasSize() {
-        const canvasWidth = window.innerWidth;
-        const canvasHeight = canvasWidth * 1.4; // Set the height to 1.4 times the width
+        const canvasWidth = window.innerWidth; // Canvas width equals the browser's width
+        const canvasHeight = canvasWidth * 1.4; // Canvas height is 1.4 times the width
 
-        // Set the size of the container
+        // Set the size of the container to match the canvas
         const filmContainer = document.querySelector('.film-container');
-        filmContainer.style.width = `${canvasWidth}px`; // No horizontal scrolling
-        filmContainer.style.height = `${canvasHeight}px`; // Allow vertical scrolling
-        filmContainer.style.position = 'relative'; // Ensure container is positioned
-        filmContainer.style.overflow = 'hidden'; // Prevent horizontal overflow, but allow vertical scroll if needed
-        filmContainer.style.padding = '0'; // Ensure no padding in the container
-        filmContainer.style.margin = '0';  // Ensure no margin in the container
+        filmContainer.style.width = `${canvasWidth}px`; // Width = viewport width
+        filmContainer.style.height = `${canvasHeight}px`; // Height = 1.4 times the width
+        filmContainer.style.position = 'relative'; // Relative positioning for drift area
+        filmContainer.style.overflow = 'hidden'; // Prevent any overflow
+        filmContainer.style.padding = '0'; // No padding in the container
+        filmContainer.style.margin = '0'; // No margin in the container
     }
 
-    // Call it once to set initial size
+    // Call it once to set the initial canvas size
     setCanvasSize();
 
     // Function to move each card at a constant, slow speed
     function drift(card) {
-        let xPos = Math.random() * window.innerWidth;
-        let yPos = Math.random() * (window.innerWidth * 1.4); // Adjust initial Y position to fit canvas height
-        let xMove = (Math.random() * 0.2 + 0.05); // Constant, slow speed for x-axis
-        let yMove = (Math.random() * 0.2 + 0.05); // Constant, slow speed for y-axis
+        let xPos = Math.random() * (window.innerWidth - card.offsetWidth); // Ensure card starts within the width
+        let yPos = Math.random() * ((window.innerWidth * 1.4) - card.offsetHeight); // Ensure card starts within the height
+        let xMove = (Math.random() * 0.2 + 0.05); // Slow random speed for x-axis
+        let yMove = (Math.random() * 0.2 + 0.05); // Slow random speed for y-axis
 
-        // Randomize initial direction (left/right, up/down)
         let xDirection = Math.random() > 0.5 ? 1 : -1;
         let yDirection = Math.random() > 0.5 ? 1 : -1;
 
@@ -33,41 +32,51 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.left = `${xPos}px`;
         card.style.top = `${yPos}px`;
 
+        let isPaused = false; // Flag to control if the card should stop moving
+
         function animate() {
-            const canvasWidth = window.innerWidth;
-            const canvasHeight = canvasWidth * 1.4; // Adjust height to 1.4 times the width
+            if (!isPaused) {
+                const canvasWidth = window.innerWidth; // Drift area width = browser width
+                const canvasHeight = canvasWidth * 1.4; // Drift area height = 1.4 times the width
 
-            // Update positions based on direction
-            xPos += xMove * xDirection;
-            yPos += yMove * yDirection;
+                xPos += xMove * xDirection;
+                yPos += yMove * yDirection;
 
-            // Bounce back if the card's edges hit the right/left edge
-            if (xPos + card.offsetWidth >= canvasWidth) {
-                xPos = canvasWidth - card.offsetWidth; // Ensure it stays within bounds
-                xDirection *= -1; // Reverse the horizontal direction
-            } else if (xPos <= 0) {
-                xPos = 0; // Ensure it stays within bounds
-                xDirection *= -1; // Reverse the horizontal direction
+                if (xPos + card.offsetWidth > canvasWidth) {
+                    xPos = canvasWidth - card.offsetWidth;
+                    xDirection *= -1;
+                }
+                if (xPos < 0) {
+                    xPos = 0;
+                    xDirection *= -1;
+                }
+                if (yPos + card.offsetHeight > canvasHeight) {
+                    yPos = canvasHeight - card.offsetHeight;
+                    yDirection *= -1;
+                }
+                if (yPos < 0) {
+                    yPos = 0;
+                    yDirection *= -1;
+                }
+
+                card.style.transform = `translate(${xPos}px, ${yPos}px)`;
             }
-
-            // Bounce back if the card's edges hit the top/bottom edge
-            if (yPos + card.offsetHeight >= canvasHeight) {
-                yPos = canvasHeight - card.offsetHeight; // Ensure it stays within bounds
-                yDirection *= -1; // Reverse the vertical direction
-            } else if (yPos <= 0) {
-                yPos = 0; // Ensure it stays within bounds
-                yDirection *= -1; // Reverse the vertical direction
-            }
-
-            // Apply the new positions to the card
-            card.style.transform = `translate(${xPos}px, ${yPos}px)`;
-
-            // Request the next animation frame
             requestAnimationFrame(animate);
         }
 
         // Start the animation for this card
         animate();
+
+        // Event listeners to handle hover behavior
+        card.addEventListener('mouseenter', () => {
+            isPaused = true; // Pause movement on hover
+            card.style.opacity = '1'; // Set opacity to 100%
+        });
+
+        card.addEventListener('mouseleave', () => {
+            isPaused = false; // Resume movement when not hovered
+            card.style.opacity = '0.4'; // Set opacity back to 40%
+        });
     }
 
     // Apply the drift effect to each card
