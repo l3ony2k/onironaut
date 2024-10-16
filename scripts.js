@@ -345,3 +345,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500); // Wait for the fade-out transition before hiding
     });
 });
+
+// music autoplay
+document.addEventListener('DOMContentLoaded', () => {
+    const music = document.getElementById('background-music');
+    
+    // Check if the user has interacted with the page before playing the music
+    function playMusic() {
+        if (music.paused) {
+            music.play().catch(error => {
+                console.log('Autoplay was prevented. User interaction required.');
+            });
+        }
+    }
+
+    // Attempt to play music on page load
+    playMusic();
+
+    // Optional: You can retry playing after a user interaction if autoplay is blocked
+    document.body.addEventListener('click', () => {
+        playMusic();
+    });
+});
