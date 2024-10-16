@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.filter = `blur(${randomBlur}px)`;
 
         // Apply a random transparency between 10% (0.1) and 50% (0.5)
-        const randomOpacity = Math.random() * (0.5 - 0.1) + 0.1;
+        const randomOpacity = Math.random() * (0.7 - 0.15) + 0.15;
         card.style.opacity = randomOpacity;
 
         // Add the "X" button to each card
@@ -183,6 +183,72 @@ document.addEventListener('selectstart', function (e) {
 
 let isDragging = false;
 let startX, startY, rect;
+
+// floating title animation
+
+document.addEventListener('DOMContentLoaded', () => {
+    const floatingTitle = document.querySelector('.floating-title');
+
+    function driftFloatingTitle() {
+        // Initial position
+        let xPos = Math.random() * (window.innerWidth - floatingTitle.offsetWidth);
+        let yPos = Math.random() * (window.innerHeight * 0.3 - floatingTitle.offsetHeight); // Keep within top 30%
+        
+        // Random movement speed
+        let xMove = (Math.random() * 0.2 + 0.05);
+        let yMove = (Math.random() * 0.2 + 0.05);
+
+        // Random direction for movement
+        let xDirection = Math.random() > 0.5 ? 1 : -1;
+        let yDirection = Math.random() > 0.5 ? 1 : -1;
+
+        // Ensure the title is fully within the canvas initially
+        floatingTitle.style.left = `${xPos}px`;
+        floatingTitle.style.top = `${yPos}px`;
+
+        function animate() {
+            const canvasWidth = window.innerWidth;
+            const canvasHeight = window.innerHeight * 0.3; // Restrict to top 30%
+
+            // Update position based on movement direction and speed
+            xPos += xMove * xDirection;
+            yPos += yMove * yDirection;
+
+            // Check for boundaries and reverse direction if the title hits any edge
+            if (xPos + floatingTitle.offsetWidth > canvasWidth) {
+                xPos = canvasWidth - floatingTitle.offsetWidth;
+                xDirection *= -1; // Reverse horizontal direction
+            }
+            if (xPos < 0) {
+                xPos = 0;
+                xDirection *= -1; // Reverse horizontal direction
+            }
+            if (yPos + floatingTitle.offsetHeight > canvasHeight) {
+                yPos = canvasHeight - floatingTitle.offsetHeight;
+                yDirection *= -1; // Reverse vertical direction
+            }
+            if (yPos < 0) {
+                yPos = 0;
+                yDirection *= -1; // Reverse vertical direction
+            }
+
+            // Set the new position
+            floatingTitle.style.left = `${xPos}px`;
+            floatingTitle.style.top = `${yPos}px`;
+
+            // Request the next animation frame to continue the animation
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation
+        animate();
+    }
+
+    // Initialize drifting behavior for the floating title
+    driftFloatingTitle();
+});
+
+
 
 // Function to generate random RGBA color
 function getRandomColor() {

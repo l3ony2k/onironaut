@@ -1,11 +1,34 @@
+
+@font-face {
+    font-family: 'EditorialNewThin';
+    src: url('./fonts/EditorialNew-Thin.otf') format('opentype');
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: 'SuisseIntlMono';
+    src: url('./fonts/SuisseIntlMono-Regular.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'PPWriterRegularText';
+    src: url('./fonts/PPWriter-RegularText.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'PPWriterRegularItalic';
+    src: url('./fonts/PPWriter-RegularItalic.otf') format('opentype');
+}
+
 /* Global settings */
 body, html {
     margin: 0;
     padding: 0;
     /* width: 100vw; /* Body width equal to the viewport width */
-    /* height: 80vw; Body height equal to 130% of the viewport width */
+    height: 80vw; /* Body height equal to 130% of the viewport width */
     overflow-x: auto; /* Allow horizontal scrolling */
     background-color: #000; /* Black background */
+    font-family: 'PPWriterRegularText', serif;
 }
 
 body {
@@ -68,22 +91,32 @@ body, .film-card {
 /* Card titles */
 .film-card h2 {
     margin: 0;
-    font-size: 1.3em;
+    font-size: 2em;
+    font-family: 'EditorialNewThin', sans-serif;
+    margin-bottom: 15px;
 }
 
-/* Text inside film cards */
-.film-card p {
-    margin: 10px 0;
+.year, .director, .leads {
+    font-family: 'SuisseIntlMono', sans-serif;
+    font-size:0.7rem;
+    margin: 0;
+    padding:0;
 }
+
+.leads {
+    margin-bottom: 20px;
+}
+
 
 /* Description in italic */
 .description {
-    font-style: italic;
+    font-family: 'PPWriterRegularText', serif;
 }
 
 /* Bold style for storytelling techniques */
 .techniques {
-    font-weight: bold;
+    font-family: 'PPWriterRegularItalic', serif;
+    padding-left: 50px;
 }
 
 /* the dragging rectangle */
@@ -99,3 +132,24 @@ body, .film-card {
     opacity: 0;
     filter: blur(50px);
 }
+
+/* Floating title style */
+.floating-title {
+    font-family: 'EditorialNewThin', sans-serif;
+    font-size: 8vw; /* Adjust size as needed */
+    color: white;
+    position: absolute;
+    top: 0; /* Ensure it's in the top area */
+    left: 0;
+    width: auto;
+    white-space: nowrap; /* Prevent text from wrapping */
+    filter: blur(0px); /* Add a subtle blur */
+    z-index: 10; /* Ensure it's above other elements */
+    transition: opacity 2s ease-in-out;
+    padding: 30px; /* Add padding if needed */
+}
+
+.floating-title:hover {
+    filter: blur(12px); 
+}
+
