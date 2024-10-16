@@ -11,6 +11,8 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    position: relative; /* Ensure that the cards move relative to this container */
+
 }
 
 .film-card {
@@ -21,6 +23,7 @@ body {
     width: 300px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
+    position: absolute; /* Make sure each card can float freely */
 }
 
 .film-card:hover {
@@ -44,3 +47,4 @@ body {
 .techniques {
     font-weight: bold;
 }
+
