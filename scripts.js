@@ -15,15 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
         filmContainer.style.margin = '0';  // Ensure no margin in the container
     }
 
-    // Call it once to set the initial size
+    // Call it once to set initial size
     setCanvasSize();
 
-    // Function to move each card
+    // Function to move each card at a constant, slow speed
     function drift(card) {
         let xPos = Math.random() * window.innerWidth;
-        let yPos = Math.random() * (window.innerWidth * 1.4);
-        let xMove = (Math.random() * 0.5 + 0.1); // Slow speed for x-axis
-        let yMove = (Math.random() * 0.5 + 0.1); // Slow speed for y-axis
+        let yPos = Math.random() * (window.innerWidth * 1.4); // Correct initial Y position for new height
+        let xMove = (Math.random() * 0.2 + 0.05); // Constant, slow speed for x-axis
+        let yMove = (Math.random() * 0.2 + 0.05); // Constant, slow speed for y-axis
 
         // Randomize initial direction (left/right, up/down)
         let xDirection = Math.random() > 0.5 ? 1 : -1;
@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function animate() {
             const canvasWidth = window.innerWidth;
-            const canvasHeight = canvasWidth * 1.4;
+            const canvasHeight = canvasWidth * 1.4; // Adjust height to 1.4 times the width
 
             // Update positions based on direction
             xPos += xMove * xDirection;
             yPos += yMove * yDirection;
 
-            // Bounce back if the card hits the right/left edge
+            // Bounce back if the card's edges hit the right/left edge
             if (xPos + card.offsetWidth >= canvasWidth) {
                 xPos = canvasWidth - card.offsetWidth; // Ensure it stays within bounds
                 xDirection *= -1; // Reverse the horizontal direction
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 xDirection *= -1; // Reverse the horizontal direction
             }
 
-            // Bounce back if the card hits the top/bottom edge
+            // Bounce back if the card's edges hit the top/bottom edge
             if (yPos + card.offsetHeight >= canvasHeight) {
                 yPos = canvasHeight - card.offsetHeight; // Ensure it stays within bounds
                 yDirection *= -1; // Reverse the vertical direction

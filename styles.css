@@ -1,56 +1,67 @@
+/* Global settings */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Ensure no scrollbars */
+    background-color: #000; /* Black background */
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #000; /* Black background */
-    margin: 0;
-    padding: 20px;
     color: white; /* Default text color as white */
 }
+
+/* Disable text selection and change cursor */
 body, .film-card {
-    user-select: none; /* Disable text selection */
-    cursor: crosshair; /* Use the pointer cursor for a clickable/interactive feel */
+    user-select: none;
+    cursor: default;
 }
 
+/* Film container setup */
 .film-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    position: relative; /* Ensure that the cards move relative to this container */
+    position: relative;
     overflow: hidden; /* Prevent cards from going outside the container */
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
 
+/* Film card styling */
 .film-card {
-    background-color: rgba(255, 255, 255, 0.1); /* 20% transparent white background */
-    border: 0.3px solid white; /* White border */
+    background-color: rgba(255, 255, 255, 0.1); /* 10% transparent white */
+    border: 0.3px solid white;
     border-radius: 10px;
     padding: 20px;
     width: 300px;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Light white shadow for a dreamy effect */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    position: absolute; /* Cards can freely float */
     transition: transform 0.3s ease-in-out;
-    position: absolute; /* Make sure each card can float freely */
-    color: white; /* Ensure text inside is white */
+    color: white;
 }
 
+/* Hover effect for film cards */
 .film-card:hover {
-    transform: translateY(-10px); /* Slight lift on hover */
+    transform: translateY(-10px); /* Lift on hover */
 }
 
+/* Card titles */
 .film-card h2 {
     margin: 0;
     font-size: 1.3em;
-    color: white; /* White text for the film title */
 }
 
+/* Text inside film cards */
 .film-card p {
     margin: 10px 0;
-    color: white; /* Ensure paragraph text is white */
 }
 
+/* Description in italic */
 .description {
-    font-style: italic; /* Italic style for descriptions */
+    font-style: italic;
 }
 
+/* Bold style for storytelling techniques */
 .techniques {
-    font-weight: bold; /* Bold style for storytelling techniques */
+    font-weight: bold;
 }
