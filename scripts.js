@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.film-card');
+    let specialCards = []; // Array to store the 3 cards with fixed blur of 1.5px
 
     function setCanvasSize() {
         const canvasWidth = window.innerWidth; // Canvas width equals the browser's width
@@ -31,6 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.position = 'absolute'; // Allow card to move freely within the container
         card.style.left = `${xPos}px`;
         card.style.top = `${yPos}px`;
+
+        // Apply a random blur between 0px and 5px to each card in the default state
+        const randomBlur = Math.random() * 5;
+        card.style.filter = `blur(${randomBlur}px)`;
+
+        // Apply a random transparency between 10% (0.1) and 50% (0.5)
+        const randomOpacity = Math.random() * (0.5 - 0.1) + 0.1;
+        card.style.opacity = randomOpacity;
+
+        // Add the "X" button to each card
+        const closeButton = document.createElement('div');
+        closeButton.classList.add('close-button');
+        closeButton.addEventListener('click', () => deleteCard(card));
+        card.appendChild(closeButton);
 
         let isPaused = false; // Flag to control if the card should stop moving
 
@@ -71,12 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event listeners to handle hover behavior
         card.addEventListener('mouseenter', () => {
             isPaused = true; // Pause movement on hover
+            card.style.filter = 'blur(0px)'; // Disable blur on hover
             card.style.opacity = '1'; // Full opacity on hover
+            card.style.zIndex = '100'; // Bring the hovered card to the front
+            closeButton.style.display = 'block'; // Show the "X" button
         });
 
         card.addEventListener('mouseleave', () => {
             isPaused = false; // Resume movement when not hovered
-            card.style.opacity = '0.4'; // Set opacity back to 40%
+            card.style.filter = `blur(${randomBlur}px)`; // Reset to original random blur
+            card.style.opacity = randomOpacity; // Reset to original random opacity
+            card.style.zIndex = '1'; // Reset the z-index to default
+            closeButton.style.display = 'none'; // Hide the "X" button
         });
 
         // Dragging functionality
@@ -115,7 +136,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Apply the drift effect to each card
+    // Function to delete a card with a fade-out and blur effect
+    function deleteCard(card) {
+        card.style.transition = 'opacity 1s ease, filter 1s ease'; // Smooth transition for opacity and blur
+        card.style.opacity = '0'; // Fade out
+        card.style.filter = 'blur(10px)'; // Increase blur
+        setTimeout(() => card.remove(), 1000); // Remove the card after the transition
+    }
+
+    // Apply the drift effect and random blur to each card
     cards.forEach(card => drift(card));
 
     // Handle window resizing to adjust canvas dimensions dynamically
