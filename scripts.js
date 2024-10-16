@@ -1,18 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.film-card');
-    const canvasWidth = window.innerWidth;
-    const canvasHeight = canvasWidth * 2;
 
-    // Set the height of the canvas (container)
-    const filmContainer = document.querySelector('.film-container');
-    filmContainer.style.width = `${canvasWidth}px`;
-    filmContainer.style.height = `${canvasHeight}px`;
-    filmContainer.style.position = 'relative'; // Ensure container is positioned
+    function setCanvasSize() {
+        const canvasWidth = window.innerWidth;
+        const canvasHeight = canvasWidth * 2;
+
+        // Set the size of the container
+        const filmContainer = document.querySelector('.film-container');
+        filmContainer.style.width = `${canvasWidth}px`;
+        filmContainer.style.height = `${canvasHeight}px`;
+        filmContainer.style.position = 'relative'; // Ensure container is positioned
+        filmContainer.style.overflow = 'hidden'; // Ensure no overflow from the container
+    }
+
+    // Call it once to set initial size
+    setCanvasSize();
 
     // Function to move each card
     function drift(card) {
-        let xPos = Math.random() * canvasWidth;
-        let yPos = Math.random() * canvasHeight;
+        let xPos = Math.random() * window.innerWidth;
+        let yPos = Math.random() * window.innerHeight;
         let xMove = (Math.random() * 0.5 + 0.1); // Slow speed for x-axis
         let yMove = (Math.random() * 0.5 + 0.1); // Slow speed for y-axis
 
@@ -25,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.top = `${yPos}px`;
 
         function animate() {
+            const canvasWidth = window.innerWidth;
+            const canvasHeight = canvasWidth * 2;
+
             // Update positions based on direction
             xPos += xMove * xDirection;
             yPos += yMove * yDirection;
@@ -54,10 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
     cards.forEach(card => drift(card));
 
     // Handle window resizing to adjust canvas dimensions dynamically
-    window.addEventListener('resize', () => {
-        const newCanvasWidth = window.innerWidth;
-        const newCanvasHeight = newCanvasWidth * 2;
-        filmContainer.style.width = `${newCanvasWidth}px`;
-        filmContainer.style.height = `${newCanvasHeight}px`;
-    });
+    window.addEventListener('resize', setCanvasSize);
+});
+// Prevent text selection
+document.addEventListener('selectstart', function (e) {
+    e.preventDefault();
 });

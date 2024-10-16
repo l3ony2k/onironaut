@@ -1,9 +1,13 @@
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #000; /* Black background */
     margin: 0;
     padding: 20px;
+    color: white; /* Default text color as white */
+}
+body, .film-card {
+    user-select: none; /* Disable text selection */
+    cursor: crosshair; /* Use the pointer cursor for a clickable/interactive feel */
 }
 
 .film-container {
@@ -12,39 +16,41 @@ body {
     justify-content: center;
     gap: 20px;
     position: relative; /* Ensure that the cards move relative to this container */
-
+    overflow: hidden; /* Prevent cards from going outside the container */
+    padding:0;
 }
 
 .film-card {
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.1); /* 20% transparent white background */
+    border: 0.5px solid white; /* White border */
     border-radius: 10px;
     padding: 20px;
     width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Light white shadow for a dreamy effect */
     transition: transform 0.3s ease-in-out;
     position: absolute; /* Make sure each card can float freely */
+    color: white; /* Ensure text inside is white */
 }
 
 .film-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-10px); /* Slight lift on hover */
 }
 
 .film-card h2 {
     margin: 0;
     font-size: 1.5em;
+    color: white; /* White text for the film title */
 }
 
 .film-card p {
     margin: 10px 0;
-    color: #333;
+    color: white; /* Ensure paragraph text is white */
 }
 
 .description {
-    font-style: italic;
+    font-style: italic; /* Italic style for descriptions */
 }
 
 .techniques {
-    font-weight: bold;
+    font-weight: bold; /* Bold style for storytelling techniques */
 }
-
