@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Set the size of the container
         const filmContainer = document.querySelector('.film-container');
-        filmContainer.style.width = `${canvasWidth}px`;
-        filmContainer.style.height = `${canvasHeight}px`;
+        filmContainer.style.width = `${canvasWidth}px`; // No horizontal scrolling
+        filmContainer.style.height = `${canvasHeight}px`; // Allow vertical scrolling
         filmContainer.style.position = 'relative'; // Ensure container is positioned
-        filmContainer.style.overflow = 'hidden'; // Prevent cards from going outside the container
+        filmContainer.style.overflow = 'hidden'; // Prevent horizontal overflow, but allow vertical scroll if needed
         filmContainer.style.padding = '0'; // Ensure no padding in the container
         filmContainer.style.margin = '0';  // Ensure no margin in the container
     }
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to move each card at a constant, slow speed
     function drift(card) {
         let xPos = Math.random() * window.innerWidth;
-        let yPos = Math.random() * (window.innerWidth * 1.4); // Correct initial Y position for new height
+        let yPos = Math.random() * (window.innerWidth * 1.4); // Adjust initial Y position to fit canvas height
         let xMove = (Math.random() * 0.2 + 0.05); // Constant, slow speed for x-axis
         let yMove = (Math.random() * 0.2 + 0.05); // Constant, slow speed for y-axis
 

@@ -3,8 +3,7 @@ body, html {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%;
-    overflow: hidden; /* Ensure no scrollbars */
+    overflow-x: hidden; /* Disable horizontal scrolling */
     background-color: #000; /* Black background */
 }
 
@@ -22,9 +21,10 @@ body, .film-card {
 /* Film container setup */
 .film-container {
     position: relative;
-    overflow: hidden; /* Prevent cards from going outside the container */
     margin: 0;
     padding: 0;
+    width: 100%;
+    overflow: hidden; /* Prevent horizontal overflow */
 }
 
 /* Film card styling */
