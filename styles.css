@@ -2,8 +2,9 @@
 body, html {
     margin: 0;
     padding: 0;
-    width: 100%;
-    overflow-x: hidden; /* Disable horizontal scrolling */
+    width: 100vw; /* Body width equal to the viewport width */
+    height: 130vw; /* Body height equal to 130% of the viewport width */
+    overflow-x: auto; /* Allow horizontal scrolling */
     background-color: #000; /* Black background */
 }
 
@@ -23,8 +24,9 @@ body, .film-card {
     position: relative;
     margin: 0;
     padding: 0;
-    width: 100%;
-    overflow: hidden; /* Prevent horizontal overflow */
+    width: 100vw; /* Width = 100vw */
+    height: 130vw; /* Height = 130vw */
+    overflow: visible; /* Allow overflow in both directions */
 }
 
 /* Film card styling */
@@ -36,7 +38,7 @@ body, .film-card {
     width: 300px;
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     position: absolute; /* Cards can freely float */
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth opacity and movement */
+    transition: opacity 0.3s ease-in-out; /* Smooth opacity */
     opacity: 0.4; /* Dim the card by default (40% transparency) */
     color: white;
 }

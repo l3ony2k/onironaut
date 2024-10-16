@@ -3,25 +3,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setCanvasSize() {
         const canvasWidth = window.innerWidth; // Canvas width equals the browser's width
-        const canvasHeight = canvasWidth * 1.4; // Canvas height is 1.4 times the width
+        const canvasHeight = canvasWidth * 1.3; // Set height to 130vw, proportional to width
 
         // Set the size of the container to match the canvas
         const filmContainer = document.querySelector('.film-container');
-        filmContainer.style.width = `${canvasWidth}px`; // Width = viewport width
-        filmContainer.style.height = `${canvasHeight}px`; // Height = 1.4 times the width
+        filmContainer.style.width = '100vw'; // Width = 100% of the viewport width
+        filmContainer.style.height = '130vw'; // Height = 130% of the viewport width
         filmContainer.style.position = 'relative'; // Relative positioning for drift area
-        filmContainer.style.overflow = 'hidden'; // Prevent any overflow
         filmContainer.style.padding = '0'; // No padding in the container
         filmContainer.style.margin = '0'; // No margin in the container
+        filmContainer.style.overflow = 'hidden'; // Prevent overflow
     }
 
     // Call it once to set the initial canvas size
     setCanvasSize();
 
-    // Function to move each card at a constant, slow speed
+    // Function to move each card at a constant, slow speed (drifting)
     function drift(card) {
         let xPos = Math.random() * (window.innerWidth - card.offsetWidth); // Ensure card starts within the width
-        let yPos = Math.random() * ((window.innerWidth * 1.4) - card.offsetHeight); // Ensure card starts within the height
+        let yPos = Math.random() * (window.innerWidth * 1.3 - card.offsetHeight); // Ensure card starts within the height
         let xMove = (Math.random() * 0.2 + 0.05); // Slow random speed for x-axis
         let yMove = (Math.random() * 0.2 + 0.05); // Slow random speed for y-axis
 
@@ -36,8 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function animate() {
             if (!isPaused) {
-                const canvasWidth = window.innerWidth; // Drift area width = browser width
-                const canvasHeight = canvasWidth * 1.4; // Drift area height = 1.4 times the width
+                const canvasWidth = window.innerWidth; // Drift area width = 100vw
+                const canvasHeight = canvasWidth * 1.3; // Drift area height = 130vw
 
                 xPos += xMove * xDirection;
                 yPos += yMove * yDirection;
@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     yDirection *= -1;
                 }
 
-                card.style.transform = `translate(${xPos}px, ${yPos}px)`;
+                card.style.left = `${xPos}px`;
+                card.style.top = `${yPos}px`;
             }
             requestAnimationFrame(animate);
         }
@@ -70,13 +71,48 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event listeners to handle hover behavior
         card.addEventListener('mouseenter', () => {
             isPaused = true; // Pause movement on hover
-            card.style.opacity = '1'; // Set opacity to 100%
+            card.style.opacity = '1'; // Full opacity on hover
         });
 
         card.addEventListener('mouseleave', () => {
             isPaused = false; // Resume movement when not hovered
             card.style.opacity = '0.4'; // Set opacity back to 40%
         });
+
+        // Dragging functionality
+        card.addEventListener('mousedown', startDragging);
+
+        function startDragging(event) {
+            isPaused = true; // Stop movement during dragging
+
+            // Fix offset issue by calculating the exact position when mouse is pressed down
+            const cardRect = card.getBoundingClientRect();
+            let offsetX = event.clientX - cardRect.left;
+            let offsetY = event.clientY - cardRect.top;
+
+            function moveCard(e) {
+                let x = e.clientX - offsetX;
+                let y = e.clientY - offsetY;
+
+                // Ensure the card stays within bounds
+                if (x < 0) x = 0;
+                if (y < 0) y = 0;
+                if (x + card.offsetWidth > window.innerWidth) x = window.innerWidth - card.offsetWidth;
+                if (y + card.offsetHeight > window.innerWidth * 1.3) y = window.innerWidth * 1.3 - card.offsetHeight;
+
+                card.style.left = `${x}px`;
+                card.style.top = `${y}px`;
+            }
+
+            function stopDragging() {
+                document.removeEventListener('mousemove', moveCard);
+                document.removeEventListener('mouseup', stopDragging);
+                isPaused = false; // Resume drifting after dragging
+            }
+
+            document.addEventListener('mousemove', moveCard);
+            document.addEventListener('mouseup', stopDragging);
+        }
     }
 
     // Apply the drift effect to each card
