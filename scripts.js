@@ -44,17 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to move each card at a constant, slow speed (drifting)
     function drift(card) {
-        let xPos = Math.random() * (window.innerWidth - card.offsetWidth); // Ensure card starts within the width
-        let yPos = Math.random() * (window.innerWidth * 1.3 - card.offsetHeight); // Ensure card starts within the height
-        let xMove = (Math.random() * 0.2 + 0.05); // Slow random speed for x-axis
-        let yMove = (Math.random() * 0.2 + 0.05); // Slow random speed for y-axis
+        // Initialize position with numeric values
+        let xPos = Math.random() * (window.innerWidth - card.offsetWidth);
+        let yPos = Math.random() * (window.innerWidth * 1.3 - card.offsetHeight);
+        let xMove = (Math.random() * 0.2 + 0.05);
+        let yMove = (Math.random() * 0.2 + 0.05);
 
         let xDirection = Math.random() > 0.5 ? 1 : -1;
         let yDirection = Math.random() > 0.5 ? 1 : -1;
 
-        card.style.position = 'absolute'; // Allow card to move freely within the container
-        card.style.left = `${xPos}px`;
-        card.style.top = `${yPos}px`;
+        // Ensure initial position is set with numeric values
+        card.style.position = 'absolute';
+        card.style.left = xPos + 'px';
+        card.style.top = yPos + 'px';
+        card.style.transform = 'none'; // Reset any transform that might interfere
 
         // Apply a random blur between 0px and 5px to each card in the default state
         const randomBlur = Math.random() * 10;
@@ -70,12 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
         closeButton.addEventListener('click', () => deleteCard(card));
         card.appendChild(closeButton);
 
-        let isPaused = false; // Flag to control if the card should stop moving
+        let isPaused = false;
 
         function animate() {
             if (!isPaused) {
-                const canvasWidth = window.innerWidth; // Drift area width = 100vw
-                const canvasHeight = canvasWidth * 1.3; // Drift area height = 130vw
+                const canvasWidth = window.innerWidth;
+                const canvasHeight = canvasWidth * 1.3;
 
                 xPos += xMove * xDirection;
                 yPos += yMove * yDirection;
@@ -97,46 +100,67 @@ document.addEventListener('DOMContentLoaded', () => {
                     yDirection *= -1;
                 }
 
+                // Update position with numeric values
                 card.style.left = `${xPos}px`;
                 card.style.top = `${yPos}px`;
             }
             requestAnimationFrame(animate);
         }
 
-        // Start the animation for this card
+        // Start the animation
         animate();
 
         // Event listeners to handle hover behavior
         card.addEventListener('mouseenter', () => {
-            isPaused = true; // Pause movement on hover
-            card.style.filter = 'blur(0px)'; // Disable blur on hover
-            card.style.opacity = '1'; // Full opacity on hover
-            card.style.zIndex = '100'; // Bring the hovered card to the front
-            closeButton.style.display = 'block'; // Show the "X" button
+            isPaused = true;
+            card.style.filter = 'blur(0px)';
+            card.style.opacity = '1';
+            card.style.zIndex = '100';
+            closeButton.style.display = 'block';
         });
 
         card.addEventListener('mouseleave', () => {
-            isPaused = false; // Resume movement when not hovered
-            card.style.filter = `blur(${randomBlur}px)`; // Reset to original random blur
-            card.style.opacity = randomOpacity; // Reset to original random opacity
-            card.style.zIndex = '1'; // Reset the z-index to default
-            closeButton.style.display = 'none'; // Hide the "X" button
+            if (!card.isDragging) {  // Only resume if not dragging
+                isPaused = false;
+                card.style.filter = `blur(${randomBlur}px)`;
+                card.style.opacity = randomOpacity;
+                card.style.zIndex = '1';
+                closeButton.style.display = 'none';
+            }
         });
 
         // Dragging functionality
         card.addEventListener('mousedown', startDragging);
 
         function startDragging(event) {
-            isPaused = true; // Stop movement during dragging
+            event.preventDefault(); // Prevent text selection
+            card.isDragging = true;
+            isPaused = true;
 
-            // Fix offset issue by calculating the exact position when mouse is pressed down
+            // Store the original position before dragging
+            const originalX = parseFloat(card.style.left);
+            const originalY = parseFloat(card.style.top);
+
+            // Fix offset issue by calculating the exact position
             const cardRect = card.getBoundingClientRect();
             let offsetX = event.clientX - cardRect.left;
             let offsetY = event.clientY - cardRect.top;
 
+            // Remove transition during dragging
+            card.style.transition = 'none';
+            card.style.zIndex = '1000'; // Ensure dragged card is on top
+
             function moveCard(e) {
                 let x = e.clientX - offsetX;
                 let y = e.clientY - offsetY;
+
+                // Scroll offset
+                const scrollLeft = window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft || 0;
+                const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+                // Add scroll offset
+                x += scrollLeft;
+                y += scrollTop;
 
                 // Ensure the card stays within bounds
                 if (x < 0) x = 0;
@@ -151,7 +175,25 @@ document.addEventListener('DOMContentLoaded', () => {
             function stopDragging() {
                 document.removeEventListener('mousemove', moveCard);
                 document.removeEventListener('mouseup', stopDragging);
-                isPaused = false; // Resume drifting after dragging
+                card.isDragging = false;
+                
+                // Add smooth transition back to original position
+                const transitionDuration = 0.8;
+                card.style.transition = `left ${transitionDuration}s cubic-bezier(0.34, 1.56, 0.64, 1), top ${transitionDuration}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
+                card.style.left = `${originalX}px`;
+                card.style.top = `${originalY}px`;
+
+                // Use transitionend event instead of setTimeout
+                const transitionEndHandler = function(e) {
+                    if (e.propertyName === 'top') {
+                        card.style.transition = 'none';
+                        card.style.zIndex = '1';
+                        isPaused = false;
+                        card.removeEventListener('transitionend', transitionEndHandler);
+                    }
+                };
+                
+                card.addEventListener('transitionend', transitionEndHandler);
             }
 
             document.addEventListener('mousemove', moveCard);
